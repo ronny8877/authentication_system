@@ -6,3 +6,4 @@ backup/
 .env/
 .vscode/
 package-lock.json
+.env

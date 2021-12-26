@@ -12,7 +12,9 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@types/bcrypt": "^5.0.0",
 		"@types/lodash": "^4.14.178",
+		"@types/uuid": "^8.3.3",
 		"bcrypt": "^5.0.1",
 		"colors": "^1.4.0",
 		"cors": "^2.8.5",
@@ -25,6 +27,7 @@
 		"mongoose": "^6.0.5",
 		"nodemon": "^2.0.12",
 		"ts-jest": "^27.1.2",
+		"uuid": "^8.3.2",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
