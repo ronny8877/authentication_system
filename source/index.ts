@@ -1,7 +1,7 @@
 import http from "http";
 import express from "express";
 import config from "./config";
-
+import admin from 'firebase-admin'
 
 
 
@@ -49,9 +49,10 @@ app.use((req, res, next) => {
 //initialization of routes
 import routes from "./startup/init_routes";
 import db from "./startup/init_db";
+import init from '../source/startup/init_firebase';
 db();
 routes(app);
-
+init()
 //starting the server
 
 server.listen(config.port, () => {
@@ -63,3 +64,9 @@ server.listen(config.port, () => {
 
 
 module.exports= server;
+//TELL ME A PROGRAMMING JOKE
+//YOUR CODE
+
+
+//here lies my selfesteem as a programmer
+//roasted by github copilot

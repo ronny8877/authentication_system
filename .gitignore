@@ -7,3 +7,4 @@ backup/
 .vscode/
 package-lock.json
 .env
+source/startup/firebase.secrate.json
