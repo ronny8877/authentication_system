@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { mongo } from "mongoose";
 import User, { isValidLogin, isValidUser } from '../models/user.model'
 import _ from 'lodash'
 import Validator from "../middleware/validator";
+import { auth } from "../middleware/auth";
+import { checkParamsId } from "../middleware/paramsId";
 const express = require("express");
 const router = express.Router();
 
@@ -48,11 +49,34 @@ try{
 }catch(ex){
     next(ex);
 }
-}
+});
 
 
 
-);
+// a function to get Users information
+router.get("/:id", [auth, checkParamsId], async function (req: Request, res: Response, next: NextFunction) {
+    try {
+        let user = await User.findById(req.params.id).select("-password -id -type -app_access -is_locked -token");
+        if (!user) return res.status(404).send("User not found");
+        res.status(200).send(user);
+    } catch (ex) {
+        next(ex);
+    }
+});
+
+
+// a function to update Users information
+router.put("/:id", [auth, checkParamsId], async function (req: Request, res: Response, next: NextFunction) {
+    try {
+        let user = await User.findById(req.params.id);
+        if (!user && user === null) return res.status(404).send("User not found");
+
+        await user.save();
+        res.status(200).send("User updated successfully");
+    } catch (ex) {
+        next(ex);
+    }
+});
 
 
 

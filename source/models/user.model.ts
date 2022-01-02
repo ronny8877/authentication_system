@@ -98,6 +98,7 @@ interface token{
 userSchema.methods.generateJwtToken= function():token {
    
     return jwt.sign({
+        token: this.user_token,
         _id:this._id,
         name:this.name,
         email:this.email,
@@ -126,29 +127,21 @@ const validateLogin = (user: any) => {
 }
 
 
-const validateUser = (user:any)=>{
-   
-//validating properties of user before saving using Joi
-const schema = Joi.object({
-    name: Joi.string().min(3).max(64).required(),
-    email: Joi.string().min(5).max(255).required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-    password: Joi.string().min(6).max(30).required().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
-    repeat_password: Joi.ref('password'),
-    gender: Joi.string().valid("male", "female","others").required(),
-    phone: Joi.string().required().min(10).max(18),
-    role: Joi.string().valid('admin', 'user', 'mod', 'guest', 'developer'),
-    is_active: Joi.boolean(),
-    created_at: Joi.date(),
-    updated_at: Joi.date(),
-    dob: Joi.date(),
-    is_email_verified: Joi.boolean(),
-    is_blocked: Joi.boolean(),
-    is_phone_verified: Joi.boolean(),
-    app_access: Joi.object(),
-    display_picture: Joi.string(),
-})
-return schema.validate(user)
+const validateUser = (user: any) => {
+
+    //validating properties of user before saving using Joi
+    const schema = Joi.object({
+        name: Joi.string().min(3).max(64).required(),
+        email: Joi.string().min(5).max(255).required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+        password: Joi.string().min(6).max(30).required().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+        repeat_password: Joi.ref('password'),
+        gender: Joi.string().valid("male", "female", "others").required(),
+        phone: Joi.string().required().min(10).max(18),
+        dob: Joi.date(),
+    })
+    return schema.validate(user)
 }
+
 
 const User = mongoose.model<UserInterface>("Users", userSchema);
 export {validateUser as isValidUser}

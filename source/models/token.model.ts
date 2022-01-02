@@ -3,7 +3,8 @@ import mongoose, {
 } from "mongoose";
 import TokenInterface from "../interfaces/token"
 import { v4 as uuidv4 } from 'uuid';
-
+import { version as uuidVersion } from 'uuid';
+import { validate as uuidValidate } from 'uuid';
 
 
 const tokenSchema = new Schema({
@@ -46,6 +47,9 @@ const tokenSchema = new Schema({
 }
 )
 
+tokenSchema.methods.verify = function (uuid: string) {
+    return uuidValidate(uuid) && uuidVersion(uuid) === 4;
+}
 
 
 

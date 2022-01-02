@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-function auth(req: Request, res: Response, next: NextFunction) {
+export function auth(req: Request, res: Response, next: NextFunction) {
   const token = req.header("x-auth-token");
   if (!token) return res.status(401).send("Access Denied.");
 
@@ -23,4 +23,4 @@ function auth(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-module.exports = auth;
+

@@ -11,7 +11,7 @@ export default interface TokenInterface extends Document {
     token: string;
     is_active: boolean;
     created_at: Date;
-    isUnique: Function;
+    verify: Function;
 
 
 }
