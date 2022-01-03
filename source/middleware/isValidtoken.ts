@@ -9,6 +9,7 @@ export function isValidToken(req: Request, res: Response, next: NextFunction) {
     if (uuidValidate(token) && uuidVersion(token) === 4) {
         res.status(400).send("Invalid ID");
     } else {
+
         next();
     }
 }

@@ -1,6 +1,7 @@
 import {
     Document
 } from "mongoose";
+import AppInterface from "./apps";
 
  interface UserInterface extends Document {
      _id:string;
@@ -16,7 +17,7 @@ import {
      dob: Date;
      is_verified: boolean;
      is_blocked: boolean;
-     app_access: object;
+     app_access: AppInterface;
      is_email_verified: boolean;
      is_phone_verified: boolean;
      display_picture: string;

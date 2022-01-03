@@ -8,6 +8,11 @@ import { validate as uuidValidate } from 'uuid';
 
 
 const tokenSchema = new Schema({
+    alias: {
+        type: String,
+        required: true,
+
+    },
     issued_by
         : {
         required: true,
@@ -53,5 +58,5 @@ tokenSchema.methods.verify = function (uuid: string) {
 
 
 
-const Issued_token = mongoose.model<TokenInterface>('app_tokens', tokenSchema)
+const Issued_token = mongoose.model<TokenInterface>('tokens', tokenSchema)
 export default Issued_token;

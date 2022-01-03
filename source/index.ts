@@ -1,12 +1,13 @@
 import http from "http";
 import express from "express";
 import config from "./config";
-import admin from 'firebase-admin'
+
 
 
 
 //express initialization
 const app = express();
+
 
 const server = http.createServer(app);
 //using middleware
