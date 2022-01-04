@@ -3,11 +3,13 @@ import {
 } from "mongoose";
 import AppInterface from "./apps";
 
-interface IsBlocked {
+export interface IsBlocked {
     status: boolean,
     since: Date,
     type: string,
-    to: Date
+    to: Date,
+    reason: string
+    by: string,
 
 }
 
@@ -25,7 +27,7 @@ interface IsBlocked {
      dob: Date;
      is_verified: boolean;
      is_blocked: IsBlocked;
-     app_access: AppInterface;
+     app_access: [AppInterface];
      is_email_verified: boolean;
      is_phone_verified: boolean;
      display_picture: string;

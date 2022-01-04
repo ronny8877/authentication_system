@@ -11,7 +11,6 @@ router.post("/new/:id", [auth, checkParamsId, isValidToken], async function (req
     //finding the user 
     let user = await User.findById(req.params.id);
     if (!user) return res.status(404).send("User not found");
-    if (user.is_blocked) return res.status(400).send("This Account is Banned");
     //if user is not a dev returning access error 
     if (user.type !== "dev") return res.status(400).send(" You do not have sufficient permissions ");
 

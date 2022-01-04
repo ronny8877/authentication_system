@@ -1,4 +1,5 @@
 import mongoose, {
+    Mongoose,
     Schema
 } from "mongoose";
 import UserInterface from "../interfaces/user";
@@ -58,6 +59,11 @@ const userSchema = new Schema({
     is_email_verified: { type: Boolean, default: false },
     is_phone_verified: { type: Boolean, default: false },
     is_blocked: {
+        reason: {
+            type: String,
+            maxlength: 255,
+        },
+        by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         status: { type: Boolean, default: false },
         since: { type: Date, },
         type: { type: String, enum: ["temporary", "permanent"] },
