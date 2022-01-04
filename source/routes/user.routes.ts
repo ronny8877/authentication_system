@@ -17,7 +17,7 @@ router.post("/login", [Validator(isValidLogin)], async function (req: Request, r
         }]
     });
     if (!user) return res.status(400).send("User with Given credentials not found");
-    if (user.is_blocked) return res.status(400).send("This Account is Banned");
+    if (user.is_blocked.status) return res.status(400).send("This Account is Banned");
 
     let temp = new User(user);
     if (!temp.validatePassword(req.body.password, user.password)) return res.status(401).send("Email or Password is incorrect");

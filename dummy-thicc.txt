@@ -1,0 +1,5 @@
+
+
+user db 
+app_db  => where users off the app are added in an array with  there respective users id
+

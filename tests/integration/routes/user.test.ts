@@ -10,7 +10,7 @@ describe('User register path', () => {
     beforeEach(async () => {
         server = await require('../../../source/index');
         payload = {
-            name: "Test",
+            display_name: "Test",
             email: "xyz@xyz.com",
             password: "123456",
             phone: "1234567891",
@@ -118,7 +118,7 @@ describe('User Login path', () => {
     })
     async function registerUser() {
         return await request(server).post("/api/users/routes/register").send({
-            name: "Test",
+            display_name: "Test",
             email: "xyz@xyz.com",
             password: "123456",
             phone: "1234567891",
@@ -146,8 +146,8 @@ describe('User Login path', () => {
     })
 
     it('should return an 401 error if password is incorrect', async () => {
-        payload.password = "123456789";
         await registerUser();
+        payload.password = "123456789";
         const res = await request(server).post("/api/users/routes/login").send(payload);
         expect(res.statusCode).toBe(401);
         expect(res.text).toBe('Email or Password is incorrect');

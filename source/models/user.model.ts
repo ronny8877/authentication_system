@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid';
 const jwt = require('jsonwebtoken')
 const userSchema = new Schema({
-    name: {
+    display_name: {
         type: String,
         maxlength: 64,
         minlength: 3
@@ -57,7 +57,12 @@ const userSchema = new Schema({
     dob: Date,
     is_email_verified: { type: Boolean, default: false },
     is_phone_verified: { type: Boolean, default: false },
-    is_locked: { type: Boolean, default: false },
+    is_blocked: {
+        status: { type: Boolean, default: false },
+        since: { type: Date, },
+        type: { type: String, enum: ["temporary", "permanent"] },
+        to: { type: Date }
+    },
     app_access:
         [{
             app_id: {
@@ -100,7 +105,7 @@ userSchema.methods.generateJwtToken= function():token {
     return jwt.sign({
         token: this.user_token,
         _id:this._id,
-        name:this.name,
+        display_name: this.display_name,
         email:this.email,
     },config.SECRET_KEY)
 }
@@ -131,7 +136,7 @@ const validateUser = (user: any) => {
 
     //validating properties of user before saving using Joi
     const schema = Joi.object({
-        name: Joi.string().min(3).max(64).required(),
+        display_name: Joi.string().min(3).max(64).required(),
         email: Joi.string().min(5).max(255).required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
         password: Joi.string().min(6).max(30).required().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
         repeat_password: Joi.ref('password'),

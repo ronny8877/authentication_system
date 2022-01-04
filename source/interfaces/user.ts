@@ -3,9 +3,17 @@ import {
 } from "mongoose";
 import AppInterface from "./apps";
 
+interface IsBlocked {
+    status: boolean,
+    since: Date,
+    type: string,
+    to: Date
+
+}
+
  interface UserInterface extends Document {
      _id:string;
-     name: string
+     display_name: string
      email:string
      password: string
      phone: number
@@ -16,7 +24,7 @@ import AppInterface from "./apps";
      updated_at: Date;
      dob: Date;
      is_verified: boolean;
-     is_blocked: boolean;
+     is_blocked: IsBlocked;
      app_access: AppInterface;
      is_email_verified: boolean;
      is_phone_verified: boolean;
