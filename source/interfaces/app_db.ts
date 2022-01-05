@@ -3,7 +3,7 @@ import { Document } from "mongoose";
 
 
 interface userList {
-    token: string;
+    user_token: string;
     uid: string;
     is_blocked: string;
     created_at: Date;
@@ -18,18 +18,10 @@ interface AccessMethods {
 
 
 }
-interface DbUsage {
-    request_count: number
-    method_access: string
-    request_limit: number
-    active_month: Date
-    active_plan: string
 
-}
 export interface AppDb extends Document {
     app_name: string;
     created_at: string;
-    usage: DbUsage;
     app_id: string;
     app_token: string;
     users: userList

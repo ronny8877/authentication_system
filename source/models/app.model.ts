@@ -2,9 +2,9 @@ import { date } from 'joi';
 import mongoose, { Schema } from 'mongoose';
 import AppInterface from '../interfaces/apps';
 import { AppDb } from '../interfaces/app_db';
+import { v4 as uuidv4 } from 'uuid';
 
-
-const app_db_schema = new Schema({
+const app_schema = new Schema({
     app_name: {
         type: String,
         required: true,
@@ -12,7 +12,11 @@ const app_db_schema = new Schema({
         minlength: 3,
         unique: true,
     }
-    ,
+    , token: {
+        type: String, unique: true,
+        default: uuidv4
+    },
+
     alias: {
         type: String,
         maxlength: 64,
@@ -85,20 +89,20 @@ const app_db_schema = new Schema({
     },
 
 
-    usage: [{
-        active_month: {
-            type: Date,
-            //the month when the usage is active
-            default: new Date()
-
-        },
+    total_usage: {
         request_limit: { type: Number, default: 5000 },
         request_count: { type: Number, default: 0 },
+    }
 
 
+    ,
+    monthly_usage: [{
+        month: { type: Number, default: new Date().getMonth() },
+        usage: {
+            request_limit: { type: Number, default: 5000 },
+            request_count: { type: Number, default: 0 },
+        }
     }]
-
-
     ,
 
     is_blocked: {
@@ -128,6 +132,6 @@ const app_db_schema = new Schema({
 
 })
 
-const App = mongoose.model<AppInterface>('Apps', app_db_schema);
+const App = mongoose.model<AppInterface>('Apps', app_schema);
 
 export default App;

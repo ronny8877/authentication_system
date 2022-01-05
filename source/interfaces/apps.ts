@@ -28,13 +28,19 @@ interface ActivePlan {
 
 interface AppUsage {
 
-    active_month: Date,
-    request_limit: number
     request_count: number
+
+    request_limit: number
+
+
 }
 
 
+interface MonthlyUsage {
+    month: number
+    usage: AppUsage
 
+}
 
 
 interface AppInterface extends Document {
@@ -43,7 +49,8 @@ interface AppInterface extends Document {
     alias: string;
     created_by: string;
     created_at: Date;
-    usage: [AppUsage];
+    monthly_usage: [MonthlyUsage]
+    total_usage: AppUsage;
     app_token: string;
     is_active: boolean;
     active_plan: ActivePlan;

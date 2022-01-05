@@ -20,7 +20,7 @@ const app_db_schema = new Schema({
         minlength: 3
     },
     app_token: {
-        type: mongoose.Schema.Types.String, ref: "token",
+        type: String,
         required: true,
         unique: true,
 
@@ -33,11 +33,11 @@ const app_db_schema = new Schema({
                 default: false
 
             },
-            token: {
-                type: mongoose.Schema.Types.String,
+            user_token: {
+                type: String,
                 required: true,
                 unique: true,
-                ref: "token"
+
 
             },
             uid: {
