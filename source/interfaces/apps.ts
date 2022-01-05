@@ -7,8 +7,8 @@ import {
 
 interface ActivePlan {
     plan_id: string;
-    created: Date;
-    updated: Date;
+    created_at: Date;
+    updated_at: Date;
     status: string;
     duration: Date;
     is_active: boolean;
