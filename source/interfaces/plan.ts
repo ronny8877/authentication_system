@@ -1,19 +1,17 @@
 export interface Plan {
     //type free base premium
     type: string;
-    amount: number;
+    discount: number;
     price: number;
     duration: number;
     currency: string;
-    interval: string;
-    interval_count: number;
-    period_days: number;
+    request_limit: number;
     plan_name: string;
     description: string;
-    statement_descriptor: string;
     metadata: any;
-    created: Date;
-    updated: Date;
+    created_at: Date;
+    updated_at: Date;
+    created_by: string;
 
 
 
