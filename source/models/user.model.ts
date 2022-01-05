@@ -40,7 +40,9 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'user', 'mod', 'guest', 'developer']
+        default: "user",
+        //only superadmin and auth_developer have access to edit plans and block any user
+        enum: ['admin', 'user', 'mod', 'guest', 'developer', 'superadmin', "auth_developer"],
 
     },
     display_picture: String
@@ -73,12 +75,17 @@ const userSchema = new Schema({
         [{
             app_id: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Apps'
+                ref: 'Apps',
+                unique: true,
             },
             access_token: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'AccessTokens'
+                type: String,
+                unique: true,
 
+            },
+            is_active: {
+                type: Boolean,
+                default: true
             },
             signed_in_at: {
                 type: Date,
