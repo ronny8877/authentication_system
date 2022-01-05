@@ -17,7 +17,7 @@ const userSchema = new Schema({
     type: {
         type: String,
         default: "user",
-        enum: ["user", "admin", "developer"]
+        enum: ['admin', 'user', 'mod', 'guest', 'developer', 'superadmin', "auth_developer"],
     },
 
     email: {
@@ -38,13 +38,7 @@ const userSchema = new Schema({
         maxlength: 20,
         required: true
     },
-    role: {
-        type: String,
-        default: "user",
-        //only superadmin and auth_developer have access to edit plans and block any user
-        enum: ['admin', 'user', 'mod', 'guest', 'developer', 'superadmin', "auth_developer"],
 
-    },
     display_picture: String
     ,
     user_token
@@ -107,17 +101,18 @@ if(pass===confirmPassword) return true
 else return false
 }
 
-interface token{
-    _id:string;
-    name: string
+export interface User_token {
+    id: string;
+    display_name: string
     email:string
+    user_token: string
 }
 
-userSchema.methods.generateJwtToken= function():token {
+userSchema.methods.generateJwtToken = function (): User_token {
    
     return jwt.sign({
-        token: this.user_token,
-        _id:this._id,
+        user_token: this.user_token,
+        id: this._id,
         display_name: this.display_name,
         email:this.email,
     },config.SECRET_KEY)

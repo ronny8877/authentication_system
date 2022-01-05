@@ -136,7 +136,15 @@ const app_schema = new Schema({
             }
         }
     ]
+    ,
+    secrate_key: {
+        type: String,
+        required: true,
+        unique: true,
+        //uid string with 56 characters
+        default: uuidv4
 
+    }
 
 
 })

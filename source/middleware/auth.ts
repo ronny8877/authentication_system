@@ -1,12 +1,14 @@
 import config from "../config";
 import { NextFunction, Request, Response } from "express";
-import User from "../models/user.model";
+import User, { User_token } from "../models/user.model";
 const jwt = require("jsonwebtoken");
+
+
 
 declare global {
   namespace Express {
     interface Request {
-      user: string;
+      user: User_token;
     }
   }
 }
