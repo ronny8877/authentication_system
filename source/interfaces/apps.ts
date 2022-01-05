@@ -16,7 +16,7 @@ interface ActivePlan {
     is_cancelled: boolean;
     is_suspended: boolean;
     is_renewed: boolean;
-    expired_on: Date;
+    expired_at: Date;
     cancelled_on: Date;
     suspended_on: Date;
     renewed_on: Date;
@@ -27,11 +27,10 @@ interface ActivePlan {
 //for monetization purposes
 
 interface AppUsage {
-    active_plan: string
+
     active_month: Date,
     request_limit: number
     request_count: number
-    method_access: string
 }
 
 
@@ -44,8 +43,7 @@ interface AppInterface extends Document {
     alias: string;
     created_by: string;
     created_at: Date;
-    type: string;
-    usage: AppUsage;
+    usage: [AppUsage];
     app_token: string;
     is_active: boolean;
     active_plan: ActivePlan;
