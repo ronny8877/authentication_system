@@ -55,6 +55,7 @@ interface AppInterface extends Document {
     is_active: boolean;
     active_plan: ActivePlan;
     is_blocked: IsBlocked;
+    db_token: string;
 
 }
 

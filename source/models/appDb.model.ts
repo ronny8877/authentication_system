@@ -1,12 +1,18 @@
 
 import mongoose, { Schema } from 'mongoose';
 import { AppDb } from '../interfaces/app_db';
-
+import { v4 as uuidv4 } from 'uuid';
 const app_db_schema = new Schema({
     app_id: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Apps',
         required: true,
-        unique: true
+
+
+    },
+    db_token: {
+        type: String,
+        unique: true,
+        default: uuidv4
 
     },
     created_at: {
@@ -22,7 +28,7 @@ const app_db_schema = new Schema({
     app_token: {
         type: String,
         required: true,
-        unique: true,
+
 
     },
     users: [

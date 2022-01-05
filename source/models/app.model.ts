@@ -126,7 +126,16 @@ const app_schema = new Schema({
 
         }
 
-    }
+    },
+    db_token: [
+        {
+            token: {
+                type: String,
+                required: true,
+                created_at: Date.now,
+            }
+        }
+    ]
 
 
 
