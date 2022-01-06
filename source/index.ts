@@ -1,14 +1,14 @@
 import http from "http";
 import express from "express";
 import config from "./config";
+import Logger from "./logging/logger";
 
 
-
-
+const NAMESPACE = "index.ts";
 //express initialization
 const app = express();
 
-
+const log = new Logger(NAMESPACE);
 const server = http.createServer(app);
 //using middleware
 app.use(express.json());
@@ -16,12 +16,12 @@ app.use(express.urlencoded({ extended: true }));
 
 //logging every request and response
 app.use((req, res, next) => {
-  console.info(
+  log.info(
     `METHOD: [ ${req.method}] -URL: [${req.url}] -IP [${req.socket.remoteAddress}] :`
   );
 
   res.on("finish", () => {
-    console.info(
+    log.info(
       ` METHOD: [ ${req.method}] -URL: [${req.url}] STATUS: [${res.statusCode}] -IP [${req.socket.remoteAddress}]`
     );
   });
@@ -51,11 +51,13 @@ app.use((req, res, next) => {
 import routes from "./startup/init_routes";
 import db from "./startup/init_db";
 import init from '../source/startup/init_firebase';
+
 db();
 routes(app);
 init()
 //starting the server
 
+log.warn(`Serving on Host ${process.env.HOSTNAME}`);
 server.listen(config.port, () => {
   console.info(
     `Listening on port ${config.port}...in ${process.env.NODE_ENV} environment `

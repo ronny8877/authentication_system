@@ -102,17 +102,16 @@ else return false
 }
 
 export interface User_token {
-    id: string;
+    _id: string;
     display_name: string
     email:string
     user_token: string
 }
 
 userSchema.methods.generateJwtToken = function (): User_token {
-   
     return jwt.sign({
         user_token: this.user_token,
-        id: this._id,
+        _id: this._id,
         display_name: this.display_name,
         email:this.email,
     },config.SECRET_KEY)

@@ -3,3 +3,8 @@
 user db 
 app_db  => where users off the app are added in an array with  there respective users id
 
+TODO: ability to register and generate a new app by the dev 
+TODO: ability to issue tokens 
+TODO: whenever the user signs into a new app make his data copy into the app db array
+
+

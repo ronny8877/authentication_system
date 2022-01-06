@@ -1,8 +1,8 @@
-import { date } from 'joi';
+
 import mongoose, { Schema } from 'mongoose';
 import AppInterface from '../interfaces/apps';
-import { AppDb } from '../interfaces/app_db';
 import { v4 as uuidv4 } from 'uuid';
+import Joi from 'joi';
 
 const app_schema = new Schema({
     app_name: {
@@ -137,7 +137,7 @@ const app_schema = new Schema({
         }
     ]
     ,
-    secrate_key: {
+    secrete_key: {
         type: String,
         required: true,
         unique: true,
@@ -149,6 +149,18 @@ const app_schema = new Schema({
 
 })
 
+
+const validateAppInput = (data: any) => {
+    const Schema = Joi.object({
+        app_name: Joi.string().required().min(3).max(64),
+        alias: Joi.string().min(3).max(64).required(),
+
+    })
+
+    Schema.validate(data)
+}
+
 const App = mongoose.model<AppInterface>('Apps', app_schema);
 
 export default App;
+export { validateAppInput as validateApp };
