@@ -12,7 +12,7 @@ const app_schema = new Schema({
         minlength: 3,
         unique: true,
     }
-    , token: {
+    , app_token: {
         type: String, unique: true,
         default: uuidv4
     },
@@ -157,7 +157,7 @@ const validateAppInput = (data: any) => {
 
     })
 
-    Schema.validate(data)
+    return Schema.validate(data)
 }
 
 const App = mongoose.model<AppInterface>('Apps', app_schema);

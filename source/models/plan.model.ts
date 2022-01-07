@@ -1,3 +1,4 @@
+import Joi, { required } from 'joi';
 import mongoose, { Schema } from 'mongoose';
 
 const plan_schema = new Schema({
@@ -18,7 +19,6 @@ const plan_schema = new Schema({
     },
     duration: {
         type: Date,
-        required: true,
         //default duration is 30 days
         //refreshes every 30 days
         default: new Date(Date.now() + (30 * 24 * 60 * 60 * 1000))
@@ -27,10 +27,13 @@ const plan_schema = new Schema({
         //monthly request limit
         type: Number,
         default: 10000
+
     },
 
     currency: {
         type: String,
+        enum: ['USD', 'INR', 'EUR', 'GBP'],
+        default: 'INR',
         required: true,
     },
 
@@ -65,7 +68,23 @@ const plan_schema = new Schema({
     },
 })
 
+const isValidPlan = (plan: any) => {
+    const schema = Joi.object({
+        type: Joi.string().valid('free', 'basic', 'pro', 'premium').required(),
+        discount: Joi.number().min(0).max(100),
+        price: Joi.number().required(),
+        description: Joi.string().required().max(1024).min(3),
+        plan_name: Joi.string().required().max(64).min(3),
+        request_limit: Joi.number().min(10000),
+        currency: Joi.string().valid('USD', 'INR', 'EUR', 'GBP').required(),
+        metadata: Joi.object(),
+
+    })
+
+    return schema.validate(plan);
+}
 
 const Plan = mongoose.model('Plans', plan_schema);
 
 export default Plan;
+export { isValidPlan };
