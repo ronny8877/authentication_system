@@ -132,8 +132,8 @@ const app_schema = new Schema({
             token: {
                 type: String,
                 required: true,
-                created_at: Date.now,
-            }
+            },
+            created_at: { type: Date, default: Date.now },
         }
     ]
     ,
