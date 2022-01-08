@@ -7,7 +7,7 @@ interface userList {
     uid: string;
     is_blocked: string;
     created_at: Date;
-
+    update: Function;
 
 }
 

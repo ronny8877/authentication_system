@@ -45,7 +45,7 @@ interface MonthlyUsage {
 
 interface AppInterface extends Document {
     _id: string;
-    app_ame: string;
+    app_name: string;
     alias: string;
     created_by: string;
     created_at: Date;

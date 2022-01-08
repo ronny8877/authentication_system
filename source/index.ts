@@ -39,6 +39,7 @@ app.use((req, res, next) => {
   );
   //exposing custom header x-auth-token
   res.header("Access-Control-Expose-Headers", "x-auth-token");
+  res.header("Access-Control-Expose-Headers", "x-app-token");
   //letting user know what is possible
   if (req.method === "OPTIONS") {
     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");

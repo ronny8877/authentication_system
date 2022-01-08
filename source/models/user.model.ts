@@ -102,10 +102,11 @@ else return false
 }
 
 export interface User_token {
-    _id: string;
-    display_name: string
-    email:string
-    user_token: string
+    _id?: string;
+    display_name?: string
+    user_token?: string
+    email?: string
+    app_key?: string
 }
 
 userSchema.methods.generateJwtToken = function (): User_token {
