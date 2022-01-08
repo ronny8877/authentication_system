@@ -52,13 +52,15 @@ router.get("/method/qr", [haveSecreteKey], async function (req: Request, res: Re
 
 
 
+
+
+
 router.get('/req/status/:id', [haveSecreteKey], async function (req: Request, res: Response, next: NextFunction) {
     if (req.params.id === undefined) return res.status(404).send("Please provide a valid id")
     let db = admin.database()
     let ref = db.ref(`SignInWith/${req.params.id}`);
 
     try {
-
         ref.once("value", async function (snapshot: any) {
             if (snapshot.val() === null) return res.status(404).send("No request found")
             if (snapshot.val().status === "pending") return res.status(200).send("Request is pending")
@@ -114,10 +116,16 @@ router.get('/req/handel/:id', [auth], async function (req: Request, res: Respons
             user.app_access.forEach(async (app: any) => {
                 if (app.app_id.toString() === snapshot.val().app_id) {
                     already_signed_in = true
-                    return res.status(400).send("User is already signed in with this app")
+
                 }
             })
-            if (already_signed_in) return
+            if (already_signed_in) {
+                await ref.update({
+                    status: "accepted"
+                })
+                return res.status(200).setHeader("x-auth-token", user.generateJwtToken()).send(user.generateJwtToken())
+
+            }
             //finding the app_db of the app
             const app_db = await App_Db.findOne({ app_id: app._id })
             if (!app_db) return res.status(404).send("App_Db not found")
@@ -151,7 +159,7 @@ router.get('/req/handel/:id', [auth], async function (req: Request, res: Respons
             })
             if (snapshot.val().status === "pending") {
                 ref.update({ status: "accepted" })
-                return res.status(200).send("Request is accepted")
+                return res.status(200).setHeader("x-auth-token", user.generateJwtToken()).send(user.generateJwtToken())
             }
 
 

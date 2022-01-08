@@ -24,7 +24,7 @@ export interface AppDb extends Document {
     created_at: string;
     app_id: string;
     app_token: string;
-    users: userList
+    users: [userList]
     access: AccessMethods;
     db_token: string;
 
