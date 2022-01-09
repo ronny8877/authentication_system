@@ -22,7 +22,9 @@ router.post("/login", [Validator(isValidLogin)], async function (req: Request, r
     let temp = new User(user);
     if (!temp.validatePassword(req.body.password, user.password)) return res.status(401).send("Email or Password is incorrect");
 
-    let token = temp.generateJwtToken();
+    let token = await temp.generateJwtToken();
+    //setting the header
+
     res.header("x-auth-token", token).status(200).send("Login Successful");
 
 })
@@ -54,9 +56,9 @@ try{
 
 
 // a function to get Users information
-router.get("/:id", [auth, checkParamsId], async function (req: Request, res: Response, next: NextFunction) {
+router.get("/", [auth], async function (req: Request, res: Response, next: NextFunction) {
     try {
-        let user = await User.findById(req.params.id).select("-password -id -type -app_access -is_locked -token");
+        let user = await User.findById(req.user._id).select("-password   -token");
         if (!user) return res.status(404).send("User not found");
         res.status(200).send(user);
     } catch (ex) {

@@ -7,7 +7,8 @@
 		"test": "jest --watchAll  --maxWorkers=1  --forceExit --detectOpenHandles ",
 		"start": "node source/index.ts",
 		"dev": "nodemon  source/index.ts",
-		"build": "RMDIR /S /Q build && prettier --write source/ && tsc"
+		"build": "RMDIR /S /Q build && prettier --write source/ && tsc",
+		"swagger-autogen": "node swagger.js"
 	},
 	"author": "",
 	"license": "ISC",
@@ -30,6 +31,8 @@
 		"nanoid": "^3.1.30",
 		"nodemon": "^2.0.12",
 		"qrcode": "^1.5.0",
+		"swagger-autogen": "^2.18.5",
+		"swagger-ui-express": "^4.3.0",
 		"ts-jest": "^27.1.2",
 		"uuid": "^8.3.2",
 		"winston": "^3.3.3"

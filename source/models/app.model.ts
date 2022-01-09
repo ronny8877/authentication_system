@@ -35,8 +35,11 @@ const app_schema = new Schema({
         type: Boolean,
         default: true
 
-    }
-    ,
+    },
+    display_picture: {
+        type: String,
+        default: "no"
+    },
     active_plan: {
         plan_id: {
             type: mongoose.Schema.Types.ObjectId, ref: 'Plans',

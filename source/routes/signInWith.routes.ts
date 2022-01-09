@@ -6,6 +6,7 @@ import { auth } from "../middleware/auth";
 import { v4 } from "uuid";
 import User from "../models/user.model";
 import App_Db from "../models/appDb.model";
+import { checkParamsId } from "../middleware/paramsId";
 const express = require("express");
 const router = express.Router();
 var admin = require("firebase-admin");
@@ -17,7 +18,7 @@ router.get("/method/qr", [haveSecreteKey], async function (req: Request, res: Re
     const app: any = await App.findOne({ secrete_key: req.user.app_key })
     if (!app) res.send(404).send("App not found")
     if (app === null) res.status(404).send("App not found")
-    //creating a document in firebase db 
+    //creating a document in firebase db
     // {
     //     "app_name": "test",
     //   "app_id": "test",
@@ -25,6 +26,8 @@ router.get("/method/qr", [haveSecreteKey], async function (req: Request, res: Re
     //status:pending,
     //created_at: new Date,
     //duration:is 5 mins
+    //user_id:user._id
+    //isProcessed:false
     // }
     const req_doc = {
         app_name: app.app_name,
@@ -32,8 +35,10 @@ router.get("/method/qr", [haveSecreteKey], async function (req: Request, res: Re
         app_token: app.app_token,
         status: "pending",
         created_at: Date.now(),
+        isProcessed: false,
         //duration is 5 mins in time
         duration: Date.now() + 300000,
+        user_id: ""
 
 
     }
@@ -41,18 +46,13 @@ router.get("/method/qr", [haveSecreteKey], async function (req: Request, res: Re
     try {
 
         const user_ref = await ref.child(doc_id).set(req_doc)
-        const qr = await QRCode.toDataURL(`name:${app.app_name} id:${doc_id}`)
-        res.send(qr)
+        const qr = await QRCode.toDataURL(`name:${app.app_name}, id:${doc_id}`)
+        res.send({ id: doc_id, qr })
     } catch (err) {
         console.log(err)
         res.status(500).send("Internal server Error")
     }
 });
-
-
-
-
-
 
 
 router.get('/req/status/:id', [haveSecreteKey], async function (req: Request, res: Response, next: NextFunction) {
@@ -62,9 +62,14 @@ router.get('/req/status/:id', [haveSecreteKey], async function (req: Request, re
 
     try {
         ref.once("value", async function (snapshot: any) {
+
             if (snapshot.val() === null) return res.status(404).send("No request found")
             if (snapshot.val().status === "pending") return res.status(200).send("Request is pending")
-            if (snapshot.val().status === "accepted") return res.status(200).send("Request is accepted")
+            if (snapshot.val().status === "accepted") {
+                let user = await User.findById(snapshot.val().user_id).select("display_name email phone gender")
+                if (!user) return res.status(404).send("User not found")
+                return res.status(200).send({ status: "Accepted", user })
+            }
             if (snapshot.val().status === "rejected") return res.status(400).send("Request is rejected")
             if (snapshot.val().status === "expired") return res.status(400).send("Request is expired")
         });
@@ -74,6 +79,29 @@ router.get('/req/status/:id', [haveSecreteKey], async function (req: Request, re
         res.status(500).send("Internal server Error")
     }
 })
+
+//getting a user of an app
+router.get('/user/:id', [haveSecreteKey, checkParamsId], async function (req: Request, res: Response, next: NextFunction) {
+    const app: any = await App.findOne({ secrete_key: req.user.app_key })
+    if (!app) return res.status(404).send("App not found")
+
+    const app_db = await App_Db.findOne({ app_id: app._id })
+    if (!app_db) return res.status(404).send("App not found")
+
+    //if the apps users array do not have user with params.id then return error
+    if (!app_db.users.length) return res.status(400).send("No user found")
+    for (let i = 0; app_db.users.length; i++) {
+
+        if (app_db.users[i].uid && app_db.users[i].uid.toString() === req.params.id) {
+            let user = await User.findById(req.params.id).select("-__v  -password -type -is_phone_verified -is_phone_verified -is_email_verified -user_token -app_access")
+            return res.status(200).send(user)
+        }
+
+    }
+
+})
+
+
 
 
 router.get('/req/handel/:id', [auth], async function (req: Request, res: Response, next: NextFunction) {
@@ -89,6 +117,7 @@ router.get('/req/handel/:id', [auth], async function (req: Request, res: Respons
 
         ref.once("value", async function (snapshot: any) {
             if (snapshot.val() === null) return res.status(404).send("No request found")
+            if (snapshot.val().isProcessed === true) return res.status(400).send("Session processed")
             if (snapshot.val().status === "rejected") return res.status(400).send("Request is rejected")
             if (snapshot.val().status === "expired") return res.status(400).send("Session Expired")
             if (snapshot.val().status === "accepted") return res.status(400).send("Already accepted")
@@ -97,7 +126,8 @@ router.get('/req/handel/:id', [auth], async function (req: Request, res: Respons
 
             if (Date.now() > snapshot.val().duration) {
                 ref.update({
-                    status: "expired"
+                    status: "expired",
+                    isProcessed: true
                 })
                 return res.status(400).send("Session Expired")
             }
@@ -121,9 +151,11 @@ router.get('/req/handel/:id', [auth], async function (req: Request, res: Respons
             })
             if (already_signed_in) {
                 await ref.update({
-                    status: "accepted"
+                    user_id: user._id,
+                    status: "accepted",
+                    isProcessed: true
                 })
-                return res.status(200).setHeader("x-auth-token", user.generateJwtToken()).send(user.generateJwtToken())
+                return res.status(200).header("x-auth-token", user.generateJwtToken()).send(user.generateJwtToken())
 
             }
             //finding the app_db of the app
@@ -158,7 +190,7 @@ router.get('/req/handel/:id', [auth], async function (req: Request, res: Respons
                 }
             })
             if (snapshot.val().status === "pending") {
-                ref.update({ status: "accepted" })
+                ref.update({ status: "accepted", user_id: user._id, isProcessed: true })
                 return res.status(200).setHeader("x-auth-token", user.generateJwtToken()).send(user.generateJwtToken())
             }
 

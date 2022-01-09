@@ -2,19 +2,29 @@ import http from "http";
 import express from "express";
 import config from "./config";
 import Logger from "./logging/logger";
-
-
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger_output.json')
 const NAMESPACE = "index.ts";
 //express initialization
 const app = express();
 
+const cros = require('cors')
 const log = new Logger(NAMESPACE);
 const server = http.createServer(app);
 //using middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//logging every request and response
+
+
+
+
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+const CorsOptions = {
+  exposedHeaders: "x-auth-token ,x-app-token",
+
+};
+app.use(cros(CorsOptions));
 app.use((req, res, next) => {
   log.info(
     `METHOD: [ ${req.method}] -URL: [${req.url}] -IP [${req.socket.remoteAddress}] :`
@@ -30,23 +40,25 @@ app.use((req, res, next) => {
 });
 
 //API_RULES
-app.use((req, res, next) => {
-  //TODO: Whitelist only the apps/sites ip address
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  //exposing custom header x-auth-token
-  res.header("Access-Control-Expose-Headers", "x-auth-token");
-  res.header("Access-Control-Expose-Headers", "x-app-token");
-  //letting user know what is possible
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-    return res.status(200).json({});
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   //TODO: Whitelist only the apps/sites ip address
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept , x-auth-token , x-app-token"
+//   );
+//   //exposing custom header x-auth-token
+//   res.header("Access-Control-Expose-Headers", "x-auth-token ,x-app-token");
+
+//   res.setHeader("x-auth-token", "")
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE");
+//   //letting user know what is possible
+//   if (req.method === "OPTIONS") {
+//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//     return res.status(200).json({});
+//   }
+//   next();
+// });
 
 //initialization of routes
 import routes from "./startup/init_routes";
