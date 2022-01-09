@@ -146,7 +146,7 @@ const validateUser = (user: any) => {
     const schema = Joi.object({
         display_name: Joi.string().min(3).max(64).required(),
         email: Joi.string().min(5).max(255).required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-        password: Joi.string().min(6).max(30).required().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+        password: Joi.string().min(6).max(30).required(),
         repeat_password: Joi.ref('password'),
         gender: Joi.string().valid("male", "female", "others").required(),
         phone: Joi.string().required().min(10).max(18),

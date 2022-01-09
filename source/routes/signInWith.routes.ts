@@ -65,8 +65,8 @@ router.get('/req/status/:id', [haveSecreteKey], async function (req: Request, re
             if (snapshot.val() === null) return res.status(404).send("No request found")
             if (snapshot.val().status === "pending") return res.status(200).send("Request is pending")
             if (snapshot.val().status === "accepted") return res.status(200).send("Request is accepted")
-            if (snapshot.val().status === "rejected") return res.status(200).send("Request is rejected")
-            if (snapshot.val().status === "expired") return res.status(200).send("Request is expired")
+            if (snapshot.val().status === "rejected") return res.status(400).send("Request is rejected")
+            if (snapshot.val().status === "expired") return res.status(400).send("Request is expired")
         });
     }
     catch (err) {
