@@ -83,4 +83,28 @@ router.put("/:id", [auth, checkParamsId], async function (req: Request, res: Res
 
 
 
+//join as a developer
+router.post("/join/developer", [auth], async function (req: Request, res: Response, next: NextFunction) {
+    try {
+        let user = await User.findById(req.user._id);
+        if (!user && user === null) return res.status(404).send("User not found");
+        if (user.is_blocked.status) return res.status(400).send("This Account is Banned");
+        if (user.type === "developer") return res.status(400).send("This user is already a developer");
+
+        await user.update({
+            $set: {
+                type: "developer"
+            }
+        });
+        res.status(200).send("Congratulations You are now a developer");
+    } catch (ex) {
+        res.status(500).send("Something went wrong");
+        next();
+
+    }
+});
+
+
+
+
 module.exports = router;
