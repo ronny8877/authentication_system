@@ -43,15 +43,15 @@ app.use((req, res, next) => {
 // app.use((req, res, next) => {
 //   //TODO: Whitelist only the apps/sites ip address
 //   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept , x-auth-token , x-app-token"
-//   );
-//   //exposing custom header x-auth-token
-//   res.header("Access-Control-Expose-Headers", "x-auth-token ,x-app-token");
+//   // res.header(
+//   //   "Access-Control-Allow-Headers",
+//   //   "Origin, X-Requested-With, Content-Type, Accept , x-auth-token , x-app-token"
+//   // );
+//   // //exposing custom header x-auth-token
+//   // res.header("Access-Control-Expose-Headers", "x-auth-token ,x-app-token");
 
-//   res.setHeader("x-auth-token", "")
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE");
+//   // res.setHeader("x-auth-token", "")
+//   // res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE");
 //   //letting user know what is possible
 //   if (req.method === "OPTIONS") {
 //     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
