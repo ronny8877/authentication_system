@@ -55,7 +55,7 @@ router.get("/method/qr", [haveSecreteKey], async function (req: Request, res: Re
 });
 
 
-router.get('/req/status/:id', [haveSecreteKey], async function (req: Request, res: Response, next: NextFunction) {
+router.get('/req/status/:id', [auth, haveSecreteKey], async function (req: Request, res: Response, next: NextFunction) {
     if (req.params.id === undefined) return res.status(404).send("Please provide a valid id")
     let db = admin.database()
     let ref = db.ref(`SignInWith/${req.params.id}`);
@@ -68,7 +68,7 @@ router.get('/req/status/:id', [haveSecreteKey], async function (req: Request, re
             if (snapshot.val().status === "accepted") {
                 let user = await User.findById(snapshot.val().user_id).select("display_name email phone gender")
                 if (!user) return res.status(404).send("User not found")
-                return res.status(200).send({ status: "Accepted", user })
+                return res.status(203).send({ status: "Accepted", user })
             }
             if (snapshot.val().status === "rejected") return res.status(400).send("Request is rejected")
             if (snapshot.val().status === "expired") return res.status(400).send("Request is expired")

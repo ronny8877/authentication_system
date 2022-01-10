@@ -89,7 +89,7 @@ router.get('/get', [auth], async function (req: Request, res: Response, next: Ne
     //finding all the app that have created_by as the user
     let app = await App.find({
         created_by: req.user._id
-    }).select("app_name app_id app_token alias created_at");
+    }).select("app_name app_id app_token alias created_at secrete_key");
 
     if (!app.length) return res.status(404).send("No apps found");
 

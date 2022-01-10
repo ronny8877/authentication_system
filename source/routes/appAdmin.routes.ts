@@ -37,8 +37,12 @@ router.get('/all/users/:id', [auth, checkParamsId], async function (req: Request
         if (!user) return res.status(400).send("User not found");
         if (user.type !== "developer") return res.status(400).send("You do not have sufficient permissions");
 
-        const app_db = await App_Db.findById(req.params.id);
+
+        const app_db = await App_Db.findOne({ app_id: req.params.id }).select("-__v");
+
         if (!app_db) return res.status(400).send("App not found");
+
+        if (!app_db.users.length) return res.status(400).send("No Users found");
 
 
         //find all the users of the app
