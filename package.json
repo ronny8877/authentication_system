@@ -10,7 +10,7 @@
 		"dev:start": "npm-run-all build dev",
 		"copy": "ts-node copy",
 		"tsc": "tsc",
-		"dev": "nodemon  build/source/index.ts",
+		"dev": "nodemon  source/index.ts",
 		"build": "npm-run-all clean  tsc ",
 		"swagger-autogen": "node swagger.js",
 		"clean": "rimraf build"
